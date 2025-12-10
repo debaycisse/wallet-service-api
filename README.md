@@ -1,4 +1,4 @@
-# Wallet Service Backend
+# Wallet Service Backend App
 
 A backend wallet service built with NestJS that allows users to deposit money using Paystack, manage wallet balances, view transaction history, and transfer funds to other users.
 
@@ -61,7 +61,7 @@ APP_URL=http://localhost:3000
 
 4. Set up PostgreSQL database:
 ```sql
-CREATE DATABASE wallet_service;
+CREATE DATABASE postgres;
 ```
 
 ## Running the Application
@@ -77,7 +77,7 @@ npm run start:prod
 
 The application will be available at:
 - API: http://localhost:3000
-- Swagger Docs: http://localhost:3000/api
+- Swagger Docs: http://localhost:3000/docs
 
 ## API Testing Guide
 
