@@ -21,7 +21,7 @@ import { ApiKeysModule } from './api-keys/api-keys.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // Set to false in production
+      synchronize: false,
     }),
     AuthModule,
     UsersModule,
