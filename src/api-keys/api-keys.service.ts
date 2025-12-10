@@ -9,6 +9,7 @@ import { ApiKey } from './entities/api-key.entity';
 import { CreateApiKeyDto, ApiKeyExpiry } from './dto/create-api-key.dto';
 import { RolloverApiKeyDto } from './dto/rollover-api-key.dto';
 import * as crypto from 'crypto';
+import { User } from '../users/entities/user.entity'
 
 @Injectable()
 export class ApiKeysService {
@@ -37,6 +38,18 @@ export class ApiKeysService {
     return 'sk_live_' + crypto.randomBytes(32).toString('hex');
   }
 
+  private hashApiKey(apiKey: string): string {
+    return crypto
+      .createHash('sha256')
+      .update(apiKey)
+      .digest('hex');
+  }
+
+  private verifyApiKey(plainTextKey: string, hashedKey: string): boolean {
+    const hashToCompare = this.hashApiKey(plainTextKey);
+    return hashToCompare === hashedKey;
+  }
+
   async createApiKey(userId: string, createDto: CreateApiKeyDto) {
 
     // Count non-revoked and non-expired keys
@@ -53,9 +66,15 @@ export class ApiKeysService {
       );
     }
 
+    // Generate plain text API key
+    const plainTextApiKey = this.generateApiKey();
+    
+    // Hash the API key before storing
+    const hashedApiKey = this.hashApiKey(plainTextApiKey);
+
     const apiKey = this.apiKeysRepository.create({
       name: createDto.name,
-      key: this.generateApiKey(),
+      key: hashedApiKey,
       permissions: createDto.permissions,
       expiresAt: this.calculateExpiry(createDto.expiry),
       userId,
@@ -64,7 +83,7 @@ export class ApiKeysService {
     const saved = await this.apiKeysRepository.save(apiKey);
 
     return {
-      api_key: saved.key,
+      api_key: plainTextApiKey,
       expires_at: saved.expiresAt,
     };
   }
@@ -97,9 +116,15 @@ export class ApiKeysService {
       throw new BadRequestException('Maximum of 5 active API keys allowed per user');
     }
 
+    // Generate new plain text API key
+    const plainTextApiKey = this.generateApiKey();
+    
+    // Hash the new API key
+    const hashedApiKey = this.hashApiKey(plainTextApiKey);
+
     const newApiKey = this.apiKeysRepository.create({
       name: expiredKey.name,
-      key: this.generateApiKey(),
+      key: hashedApiKey,
       permissions: expiredKey.permissions,
       expiresAt: this.calculateExpiry(rolloverDto.expiry),
       userId,
@@ -108,14 +133,18 @@ export class ApiKeysService {
     const saved = await this.apiKeysRepository.save(newApiKey);
 
     return {
-      api_key: saved.key,
+      api_key: plainTextApiKey,
       expires_at: saved.expiresAt,
     };
   }
 
-  async validateApiKey(key: string): Promise<any> {
+  async validateApiKey(plainTextKey: string) {
+    // Hash the incoming plain text key
+    const hashedKey = this.hashApiKey(plainTextKey);
+
+    // Find API key by hashed version
     const apiKey = await this.apiKeysRepository.findOne({
-      where: { key },
+      where: { key: hashedKey },
       relations: ['user', 'user.wallet'],
     });
 
