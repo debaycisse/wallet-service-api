@@ -29,10 +29,7 @@ export class ApiKeyStrategy extends PassportStrategy(
       throw new UnauthorizedException('Invalid or expired API key');
     }
 
-    return {
-      authType: 'api-key',
-      ...keyData
-    }
+    return keyData
 
   }
 }
