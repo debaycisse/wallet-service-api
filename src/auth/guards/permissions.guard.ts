@@ -22,16 +22,17 @@ export class PermissionsGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    const authType = request.authType;
 
     // If authenticated via JWT, allow all actions
-    if (user.email) {
+    if (authType === 'jwt')
       return true;
-    }
 
+    const apiKeyPermissions = request.permissions;
     // If authenticated via API key, check permissions
-    if (user.permissions) {
+    if (authType === 'api-key') {
       const hasPermission = requiredPermissions.every((permission) =>
-        user.permissions.includes(permission),
+        apiKeyPermissions.includes(permission)
       );
 
       if (!hasPermission) {
