@@ -1,11 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
 import { ApiKeysService } from '../../api-keys/api-keys.service';
 import { Request } from 'express';
 
 @Injectable()
-export class ApiKeyStrategy extends PassportStrategy(Strategy, 'api-key') {
+export class ApiKeyStrategy extends PassportStrategy(
+  Strategy, 'api-key'
+) {
   constructor(private apiKeysService: ApiKeysService) {
     super();
   }
@@ -17,7 +22,8 @@ export class ApiKeyStrategy extends PassportStrategy(Strategy, 'api-key') {
       throw new UnauthorizedException('API key is missing');
     }
 
-    const keyData = await this.apiKeysService.validateApiKey(apiKey);
+    const keyData = await this.apiKeysService
+      .validateApiKey(apiKey);
 
     if (!keyData) {
       throw new UnauthorizedException('Invalid or expired API key');

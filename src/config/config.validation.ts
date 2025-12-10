@@ -29,7 +29,7 @@ export function validateEnvironmentVariables(): void {
     );
   }
 
-  console.log('✅ All required environment variables are configured');
+  console.log('All required environment variables are configured');
 }
 
 // Optional: Type-safe configuration interface

@@ -1,6 +1,10 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThan } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ApiKey } from './entities/api-key.entity';
 import { CreateApiKeyDto, ApiKeyExpiry } from './dto/create-api-key.dto';
 import { RolloverApiKeyDto } from './dto/rollover-api-key.dto';
@@ -34,13 +38,6 @@ export class ApiKeysService {
   }
 
   async createApiKey(userId: string, createDto: CreateApiKeyDto) {
-    const activeKeys = await this.apiKeysRepository.count({
-      where: {
-        userId,
-        revoked: false,
-        expiresAt: LessThan(new Date()) ? undefined : undefined,
-      },
-    });
 
     // Count non-revoked and non-expired keys
     const nonExpiredKeys = await this.apiKeysRepository
@@ -51,7 +48,9 @@ export class ApiKeysService {
       .getCount();
 
     if (nonExpiredKeys >= 5) {
-      throw new BadRequestException('Maximum of 5 active API keys allowed per user');
+      throw new BadRequestException(
+        'Maximum of 5 active API keys allowed per user'
+      );
     }
 
     const apiKey = this.apiKeysRepository.create({

@@ -184,24 +184,36 @@ Content-Type: application/json
 ### 6. Transaction History
 
 ```bash
-GET /wallet/transactions
+GET /wallet/transactions?page=1&limit=10
 Authorization: Bearer YOUR_JWT_TOKEN
 ```
 
+**Query Parameters:**
+- `page` (optional): Page number, default is 1
+- `limit` (optional): Items per page, default is 10, max is 100
+
 **Response:**
 ```json
-[
-  {
-    "type": "deposit",
-    "amount": 5000,
-    "status": "success"
-  },
-  {
-    "type": "transfer",
-    "amount": 3000,
-    "status": "success"
+{
+  "data": [
+    {
+      "type": "deposit",
+      "amount": 5000,
+      "status": "success"
+    },
+    {
+      "type": "transfer",
+      "amount": 3000,
+      "status": "success"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 45,
+    "totalPages": 5
   }
-]
+}
 ```
 
 ### 7. Verify Deposit Status
@@ -331,6 +343,8 @@ src/
 │   ├── api-keys.service.ts
 │   ├── api-keys.controller.ts
 │   └── api-keys.module.ts
+├── config/
+│   └── config.validation.ts
 └── common/
     └── decorators/
         ├── permissions.decorator.ts

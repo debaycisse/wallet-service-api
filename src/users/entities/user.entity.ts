@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+  OneToMany
+} from 'typeorm';
 import { Wallet } from '../../wallet/entities/wallet.entity';
 import { ApiKey } from '../../api-keys/entities/api-key.entity';
 

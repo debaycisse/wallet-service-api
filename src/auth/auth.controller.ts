@@ -1,8 +1,16 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { 
+  Controller,
+  Get,
+  Req,
+  UseGuards
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { GoogleAuthSwagger, GoogleCallbackSwagger } from '../common/decorators/swagger/auth.swagger';
+import {
+  GoogleAuthSwagger,
+  GoogleCallbackSwagger
+} from '../common/decorators/swagger/auth.swagger';
 
 @ApiTags('Authentication')
 @Controller('auth')

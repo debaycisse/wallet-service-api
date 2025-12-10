@@ -17,7 +17,8 @@ export class AuthService {
     email: string;
     name: string;
   }): Promise<User> {
-    let user = await this.usersService.findByGoogleId(googleUser.googleId);
+    let user = await this.usersService
+      .findByGoogleId(googleUser.googleId);
 
     if (!user) {
       user = await this.usersService.create(googleUser);

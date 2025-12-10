@@ -1,5 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody } from '@nestjs/swagger';
 
 export const CreateApiKeySwagger = () => {
   return applyDecorators(
@@ -24,7 +28,10 @@ export const CreateApiKeySwagger = () => {
         },
       },
     }),
-    ApiResponse({ status: 400, description: 'Maximum 5 active keys allowed' }),
+    ApiResponse({
+      status: 400,
+      description: 'Maximum 5 active keys allowed'
+    }),
     ApiResponse({ status: 401, description: 'Unauthorized' }),
   );
 };
@@ -43,7 +50,10 @@ export const RolloverApiKeySwagger = () => {
         },
       },
     }),
-    ApiResponse({ status: 400, description: 'Key not expired or not found' }),
+    ApiResponse({
+      status: 400,
+      description: 'Key not expired or not found'
+    }),
     ApiResponse({ status: 401, description: 'Unauthorized' }),
   );
 };
